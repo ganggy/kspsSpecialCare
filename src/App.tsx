@@ -249,7 +249,8 @@ const DAY_NAMES_SHORT = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', '
 export default function App() {
   // Default to 'light' for welcoming hospital readability; user can toggle anytime
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = localStorage.getItem('ksps_special_care_theme');
+    localStorage.removeItem('ksps_special_care_theme');
+    const saved = localStorage.getItem('ksps_theme_mode_v2');
     return saved === 'dark' || saved === 'light' ? saved : 'light';
   });
   const isLight = theme === 'light';
@@ -320,7 +321,7 @@ export default function App() {
   const toggleTheme = () => {
     setTheme((prev) => {
       const next = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('ksps_special_care_theme', next);
+      localStorage.setItem('ksps_theme_mode_v2', next);
       return next;
     });
   };

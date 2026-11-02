@@ -17,6 +17,7 @@ import {
   Layers,
   LogOut,
   Microscope,
+  Moon,
   Phone,
   Plus,
   RefreshCw,
@@ -26,6 +27,7 @@ import {
   Smile,
   Sparkles,
   Stethoscope,
+  Sun,
   Ticket,
   Trash2,
   TrendingUp,
@@ -181,6 +183,10 @@ const RIGHT_BADGES: Record<
 const DAY_NAMES_SHORT = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
 
 export default function App() {
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('ksps_special_care_theme');
+    return saved === 'light' || saved === 'dark' ? saved : 'dark';
+  });
   const [activeTab, setActiveTab] = useState<'packages' | 'queues' | 'unit-admin' | 'revenue'>('packages');
   const [units, setUnits] = useState<ServiceUnit[]>([]);
   const [packages, setPackages] = useState<SpecialPackage[]>([]);
@@ -585,14 +591,26 @@ export default function App() {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('ksps_special_care_theme', next);
+      return next;
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+    <div
+      className={`min-h-screen bg-slate-950 text-slate-100 flex flex-col transition-colors duration-200 ${
+        theme === 'light' ? 'theme-light' : 'theme-dark'
+      }`}
+    >
       {/* Top Header Bar */}
       <header className="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-900/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-950/60">
-              <HeartHandshake className="w-6 h-6 text-white" />
+              <HeartHandshake className="w-6 h-6 text-white keep-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -609,8 +627,26 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Action Area: ThaID Login & HOSxP Status */}
-          <div className="flex items-center gap-3">
+          {/* Right Action Area: Theme Toggle, ThaID Login & HOSxP Status */}
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={toggleTheme}
+              title={theme === 'dark' ? 'สลับเป็นโหมดสว่าง (Light Mode)' : 'สลับเป็นโหมดมืด (Dark Mode)'}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700/80 border border-slate-700/70 text-xs font-medium text-slate-200 transition"
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="w-4 h-4 text-amber-400" />
+                  <span className="hidden sm:inline">โหมดสว่าง</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-indigo-500" />
+                  <span className="hidden sm:inline">โหมดมืด</span>
+                </>
+              )}
+            </button>
+
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/70 text-xs">
               <span
                 className={`w-2 h-2 rounded-full ${
